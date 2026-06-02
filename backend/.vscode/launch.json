@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "DocIntelligenceApplication",
+            "request": "launch",
+            "mainClass": "com.docint.DocIntelligenceApplication",
+            "projectName": "document-intelligence",
+            "vmArgs": "-Dspring.profiles.active=dev"
+        }
+    ]
+}

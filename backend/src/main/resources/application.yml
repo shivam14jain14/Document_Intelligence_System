@@ -1,0 +1,127 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: document-intelligence
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/DocumentIntelligenceDb}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:0000}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  servlet:
+    multipart:
+      max-file-size: 105MB
+      max-request-size: 110MB
+
+  # Redis connection (only used when app.cache.provider=redis). Defaults are harmless
+  # when caching is Caffeine — Spring won't open a connection unless the Redis cache manager is active.
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+
+  ai:
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY}
+      chat:
+        options:
+          model: claude-sonnet-4-6
+          max-tokens: 4096
+          temperature: 0.2
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      embedding:
+        options:
+          model: text-embedding-3-small
+    vectorstore:
+      pgvector:
+        index-type: NONE          # exact search — accurate & fast for small/medium datasets; switch to HNSW at scale
+        distance-type: COSINE_DISTANCE
+        dimensions: 1536
+        initialize-schema: true
+
+# Application-specific config
+app:
+  jwt:
+    secret: ${JWT_SECRET:docint-dev-secret-key-minimum-32-characters-long}
+    access-expiry-ms: ${JWT_ACCESS_EXPIRY_MS:900000}      # 15 min
+    refresh-expiry-ms: ${JWT_REFRESH_EXPIRY_MS:604800000} # 7 days
+
+  storage:
+    default-provider: ${STORAGE_PROVIDER:LOCAL}
+    local:
+      base-path: ${STORAGE_LOCAL_PATH:./uploads}
+    s3:
+      bucket: ${AWS_S3_BUCKET:}
+      region: ${AWS_REGION:us-east-1}
+    azure:
+      connection-string: ${AZURE_BLOB_CONNECTION_STRING:}
+      default-container: ${AZURE_BLOB_CONTAINER:}
+    sharepoint:
+      tenant-id: ${MS_TENANT_ID:}
+      client-id: ${MS_CLIENT_ID:}
+      client-secret: ${MS_CLIENT_SECRET:}
+
+  cache:
+    provider: ${CACHE_PROVIDER:caffeine}   # caffeine (local/single-node) | redis (distributed/prod)
+
+  ingestion:
+    chunk-size: 400
+    chunk-overlap: 50
+    max-file-size-mb: 100
+    embed-batch-size: 20
+    async-thread-pool-size: 5
+    max-retry-attempts: 3
+    retry-delay-ms: 1000
+
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://localhost:8080}
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+  health:
+    redis:
+      enabled: ${REDIS_HEALTH_ENABLED:false}   # off by default (Caffeine); set true in prod with Redis
+
+# Logging
+logging:
+  level:
+    com.docint: INFO
+    org.springframework.ai: INFO
+    org.springframework.security: WARN
+    org.flywaydb: INFO

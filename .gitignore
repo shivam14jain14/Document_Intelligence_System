@@ -1,0 +1,84 @@
+# ──────────────────────────────────────────────
+#  Secrets & credentials — NEVER commit these
+# ──────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+**/application-dev.yml
+**/application-local.yml
+**/application-*.local.yml
+*.pem
+*.ppk
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+*_accessKeys.csv
+*_credentials.csv
+*credentials*.csv
+Cred.txt
+cred.txt
+secrets*.yml
+*.secret
+
+# ──────────────────────────────────────────────
+#  Personal / internal docs (not for public repo)
+# ──────────────────────────────────────────────
+Documents/
+RESUME_ADDITIONS.md
+Resume_Additions.md
+SETUP_NOTES.md
+Setup_Notes.md
+*.backup.md
+*.backup.html
+
+# ──────────────────────────────────────────────
+#  Java / Maven
+# ──────────────────────────────────────────────
+backend/target/
+target/
+*.class
+*.jar
+*.war
+!**/.mvn/wrapper/maven-wrapper.jar
+backend/.mvn/
+hs_err_pid*
+replay_pid*
+
+# ──────────────────────────────────────────────
+#  Frontend / Node
+# ──────────────────────────────────────────────
+frontend/node_modules/
+node_modules/
+frontend/dist/
+dist/
+*.local
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ──────────────────────────────────────────────
+#  Uploads & runtime data
+# ──────────────────────────────────────────────
+uploads/
+docint-uploads/
+*.log
+logs/
+
+# ──────────────────────────────────────────────
+#  IDE / Editor
+# ──────────────────────────────────────────────
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ──────────────────────────────────────────────
+#  OS
+# ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
