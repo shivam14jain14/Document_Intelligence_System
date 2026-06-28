@@ -31,6 +31,29 @@ across them, and answers **grounded in your actual content** — always citing i
 "Per Section 4.2 of Vendor_X_Contract.pdf, a 2%/week penalty applies → 6%,
  within the 10% cap (Section 4.3).   [Source: Vendor_X_Contract.pdf]"
 ```
+```
+== Benchmark run MQSXY9NW: 1000 docs, 8 threads, 50 queries (category=Bench-MQSXY9NW) ==
+Generated 1000 documents.
+Logged in.
+Uploading...
+Uploaded: 1000 ok, 0 failed in 51.6s (19.4 docs/s accepted)
+Waiting for ingestion (embedding) to complete...
+  indexed=1000 processing=0 failed=0 chunks=1000
+Ingestion done: 1000 indexed, 0 failed, 1000 chunks/vectors, ~56s total (1076 docs/min)
+Querying 50 random needles...
+
+==================== RESULTS ====================
+Run id ...................... MQSXY9NW
+Documents indexed ........... 1000  (failed 0)
+Chunks / vectors created .... 1000  (avg 1.0 per doc)
+Upload throughput ........... 19.4 docs/s
+End-to-end ingestion ........ 56s  (1076 docs/min)
+Queries asked ............... 50
+End-to-end accuracy (exact needle) . 80.0%   <- headline: correct unique code
+Citation accuracy (right source cited) 100.0%
+Query latency p50 / p95 / max ..... 7.84s / 10.48s / 13.77s
+=================================================
+```
 
 ---
 
