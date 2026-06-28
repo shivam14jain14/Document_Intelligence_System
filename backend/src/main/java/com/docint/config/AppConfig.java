@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
 public class AppConfig {
@@ -22,6 +23,12 @@ public class AppConfig {
         executor.setThreadNamePrefix("ingestion-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(60);
+        // Backpressure: when the pool + queue (maxPool + queueCapacity) are full, run the task on the
+        // CALLING (Tomcat) thread instead of rejecting it. Under a burst of uploads this naturally
+        // throttles intake — uploads slow down but none are dropped, and no document is left orphaned
+        // in PROCESSING. Without this, the default AbortPolicy throws TaskRejectedException past
+        // maxPoolSize+queueCapacity in-flight tasks, 500-ing the upload after the row was already saved.
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;
     }
